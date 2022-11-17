@@ -1,0 +1,48 @@
+.loginButtonContainer{
+    padding-top: 27rem;
+}
+.loginButton{
+    width: 15%;
+    height: 70px;
+    font-size: 1.7rem;
+    border-radius: 15px;
+    border: none;
+}
+.adminLoginText{
+    font-size: 1.2rem;
+    color: rgb(84, 43, 43);
+    margin-top: 20px;
+}
+
+.adminDisplayContainer{
+    width: 40%;
+    margin-left: 20rem;
+}
+.adminProfileImageView{
+    margin-left: 12rem;
+    border-radius: 50%;
+}
+.adminEmailView{
+    margin-left: 33rem;
+    margin-top: -3.4rem;
+    font-size: 1.2rem;
+    color: rgb(65, 14, 14);
+}
+.signOutButton{
+    width: 7%;
+    font-size: 19px;
+    padding: 5px;
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 15px;
+    margin-left: 100rem;
+    font-weight: '600';
+    margin-top: 20px;
+}
+.welcomeAdminText{
+    font-size: 30px;
+    text-align: center;
+    margin-top: -10px;
+    padding-top: 20px;
+}
