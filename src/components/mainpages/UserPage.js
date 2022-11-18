@@ -2,6 +2,7 @@ import React, {useContext, useState} from 'react'
 import {GlobalState} from '../../GlobalState'
 import axios from 'axios'
 import './userpage.css'
+import Loading from './loading/Loading'
 import Background02 from '../../images/background_02.jpg'
 
 var backgroundStyle = {
@@ -18,21 +19,80 @@ function UserPage() {
   const state = useContext(GlobalState)
   const [isLogged, setIsLogged] = state.userAPI.isLogged
   const [isManager, setIsManager] = state.userAPI.isManager
+  const [isUser, setIsUser] = state.userAPI.isUser
+  const [image, setImage] = useState(false)
+  const [loading, setLoading] = useState(false)
+
   const [formContent, setFormContent] = useState(initialState)
+
+  const [token] = state.token;
 
   const handleChangeInput = e =>{
     const {name, value} = e.target
     setFormContent({...formContent, [name]:value})
   }
+  const handleUpload = async e => {
+    e.preventDefault();
+    try {
+      if(!isManager) return alert("You're not a manager")
+      const file = e.target.files[0]
+      console.log(file)
 
-  const handleSubmit = async e => {
+      if(!file) return alert("File not exist.")
+
+      if(file.size > 1024 * 1024* 10) // 10mb
+        return alert("Size too large!")
+
+      if(file.type !== 'image/jpeg' && file.type !== 'image/png')
+        return alert('File type incorrect')
+
+      let formData = new FormData();
+      
+      formData.append('file', file, file.name)
+      
+      setLoading(true)
+      const res = await axios.post('/api/upload', formData, {
+        headers: {"Content-Type": "multipart/form-data"}
+      })
+      setLoading(false)
+
+      setImage(res.data)
+
+    } catch (err) {
+      alert(err.response.data.msg)
+    }
+  }
+
+  const handleUserSubmit = async e => {
     e.preventDefault();
     try {
       console.log(formContent);
+      await axios.post('/formdata/userFormData', {...formContent}, {
+        headers: {Authorization: token}
+      });
+      alert("New Message added.")
       setFormContent(initialState);
     } catch (err) {
       alert(err.response.data.msg);
     }
+  }
+
+  const handleManagerSubmit = async e => {
+    e.preventDefault();
+    try {
+      if(!image) return alert("No image uploaded.");
+
+      await axios.post('/formdata/managerFormData', {...formContent, image}, {
+        headers: {Authorization: token}
+      })
+      alert("New message and an image uploaded.")
+      setImage(false)
+      setFormContent(initialState)
+
+    } catch (err) {
+      alert(err.response.data.msg);
+    }
+    console.log(formContent);
   }
 
   const logoutUser = async () => {
@@ -62,7 +122,7 @@ function UserPage() {
         {isLogged && loggedRouter()}
 
         <div className='getUserInputsContainer'>
-          <form onSubmit={handleSubmit}>
+          
             <textarea
               placeholder='Enter a message'
               rows={5}
@@ -75,16 +135,22 @@ function UserPage() {
               isManager ?
               (
                 <div>
-                  <button className='buttonUpload'>Upload a file</button>
+                  <input type="file" name="file" id='file_up' onChange={handleUpload} />
+
+                  {
+                    loading && <Loading/>
+                  }
+
+                  <button type='submit' className='buttonSend' onClick={handleManagerSubmit}>Send</button>
                 </div>
               )
               :
               (
-                <></>
+                <button type='submit' className='buttonSend' onClick={handleUserSubmit}>Send</button>
               )
             }
-            <button type='submit' className='buttonSend'>Send</button>
-          </form>
+            
+          
         </div>
       </div>
     </div>

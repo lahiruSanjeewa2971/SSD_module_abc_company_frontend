@@ -4,6 +4,7 @@ import axios from 'axios'
 function UserAPI(token) {
     const [isLogged, setIsLogged] = useState(false)
     const [isManager, setIsManager] = useState(false)
+    const [isUser, setIsUser] = useState(false)
 
     useEffect(() => {
         if(token){
@@ -14,6 +15,8 @@ function UserAPI(token) {
                     })
                     setIsLogged(true)
                     res.data.role === 1 ? setIsManager(true) : setIsManager(false)
+
+                    res.data.role === 0 ? setIsUser(true) : setIsUser(false)
                     
                 } catch (err) {
                     alert(err.response.data.msg)
@@ -25,7 +28,8 @@ function UserAPI(token) {
 
     return {
         isLogged: [isLogged, setIsLogged],
-        isManager: [isManager, setIsManager]
+        isManager: [isManager, setIsManager],
+        isUser: [isUser, setIsUser]
     }
 }
 

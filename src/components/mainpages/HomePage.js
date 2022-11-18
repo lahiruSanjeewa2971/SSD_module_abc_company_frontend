@@ -53,6 +53,7 @@ function HomePage() {
 
     return (
         <div style={backgroundStyle}>
+            
             {
                 Object.keys(user).length != 0 &&
                 <button onClick={ (e) => handleGoogleSignOut(e)} className='signOutButton'>Sign Out</button>
@@ -74,14 +75,18 @@ function HomePage() {
                 : 
                 (
                     <div className='loginButtonContainer'>
+                        <h2 className='websiteTopic'>Welcome to ABC company</h2>
                         <button className='loginButton' onClick={handleOpen}>User Login</button>
+                        <h6 style={{
+                            fontSize: '20px'
+                        }}>Admin login</h6>
                     </div>
                 )
             }
 
             <div id='signInDiv' style={{
-                marginLeft: '48rem',
-                marginTop: '10px'}}></div>
+                marginLeft: '49.5rem',
+                marginTop: '-45px'}}></div>
 
             <LoginPage 
                 open={open}
